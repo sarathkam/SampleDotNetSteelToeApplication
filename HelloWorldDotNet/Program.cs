@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Pivotal.Extensions.Configuration.ConfigServer;
+using Steeltoe.Extensions.Logging;
 
 namespace HelloWorldDotNet
 {
@@ -14,11 +16,29 @@ namespace HelloWorldDotNet
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                 .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>()
+                .ConfigureAppConfiguration((builderContext, configBuilder) =>
+                {
+                    var env = builderContext.HostingEnvironment;
+                    configBuilder.SetBasePath(env.ContentRootPath)
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                        .AddEnvironmentVariables()
+                        .AddConfigServer(env.EnvironmentName);
+                })
+                .ConfigureLogging((context, builder) =>
+                {
+                    builder.AddConfiguration(context.Configuration.GetSection("Logging"));
+                    builder.AddDynamicConsole();
+                })
+                .Build();
+
+            host.Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace HelloWorldDotNet.Controllers
 {
@@ -10,11 +12,21 @@ namespace HelloWorldDotNet.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+
+         private IConfiguration configuration;
+
+        public ValuesController(IConfiguration config)
+        {
+            this.configuration = config;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var messageVar = configuration["message"];
+            
+            return new string[] { "value1", "value2", messageVar};
         }
 
         // GET api/values/5

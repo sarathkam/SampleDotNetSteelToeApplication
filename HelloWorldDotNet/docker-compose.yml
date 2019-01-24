@@ -1,0 +1,17 @@
+version: "2"
+
+networks:
+  net:
+    external:
+      name: ${DOMAIN}
+
+services:
+  dotnet-webapp:
+    image: ${IMAGE_PREFIX}dotnet-webapp:latest
+    networks:
+      - net
+    domainname: ${DOMAIN}
+    restart: ${RESTART_POLICY}
+    environment:
+      - "KEY_ALIAS=${DOCKER_NETWORK_CERT_ALIAS}"
+      - "affinity:container!=~*dotnet_webapp*"
