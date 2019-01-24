@@ -7,7 +7,7 @@ networks:
 
 services:
   dotnet-webapp:
-    image: integration3a.dp-dev.jcpcloud2.net/dotnet-webapp:latest
+    image: registry.dp-dev.jcpcloud2.net/dotnet-config-client:latest
     domainname: integration3a.dp-dev.jcpcloud2.net
     restart: on-failure:10
     command: !
