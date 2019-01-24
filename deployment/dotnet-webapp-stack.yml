@@ -13,7 +13,7 @@ services:
     command: !
       --eureka.instance.metadataMap.version=4.1.5
     environment:
-      - "constraint:hosttype==services"
+      - "constraint:hosttype==${DCP_BAG_HOST_TYPE}"
       - "KEY_ALIAS=${DOCKER_NETWORK_CERT_ALIAS}"
       - "affinity:container!=~*dotnet-webapp*"
     healthcheck:
