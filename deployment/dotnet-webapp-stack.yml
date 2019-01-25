@@ -3,17 +3,17 @@ version: "3"
 networks:
   default:
     external:
-      name: integration3a
+      name: ${NETWORK}
 
 services:
   dotnet-webapp:
     image: registry.dp-dev.jcpcloud2.net/dotnet-config-client:latest
-    domainname: integration3a.dp-dev.jcpcloud2.net
-    restart: on-failure:10
+    domainname: ${DOMAIN}
+    restart: ${RESTART_POLICY}
     command: !
       --eureka.instance.metadataMap.version=4.1.5
     environment:
-      - "constraint:hosttype==${DCP_BAG_HOST_TYPE}"
+      - "constraint:hosttype==dotnetservice"
       - "KEY_ALIAS=${DOCKER_NETWORK_CERT_ALIAS}"
       - "affinity:container!=~*dotnet-webapp*"
     healthcheck:
@@ -23,7 +23,7 @@ services:
         retries: 15
     deploy:
         mode: replicated
-        replicas: 3
+        replicas: 1
         update_config:
           parallelism: 0
           delay: 10s
@@ -35,4 +35,4 @@ services:
           window: 60s
         placement:
           constraints:
-            - engine.labels.hosttype == ${DCP_BAG_HOST_TYPE}
+            - engine.labels.hosttype == dotnetservice
