@@ -12,8 +12,11 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
  	  <PackageReference Include="Steeltoe.Discovery.Client" Version="1.1.0" />
-    <PackageReference Include="Pivotal.Extensions.Configuration.ConfigServerCore" Version="2.1.1" />
+    <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="2.2.0" />
     <PackageReference Include="Steeltoe.Management.CloudFoundryCore" Version="2.1.1" />
+    <PackageReference Include="Steeltoe.Management.TracingCore" Version="2.1.1" />
+    <PackageReference Include="Steeltoe.CircuitBreaker.HystrixCore" Version="2.1.1" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="3.0.3" />
   </ItemGroup>
 
 </Project>

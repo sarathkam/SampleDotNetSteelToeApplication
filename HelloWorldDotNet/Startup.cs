@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Prometheus;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Extensions.Configuration;
 using Steeltoe.Management.CloudFoundry;
@@ -34,7 +35,9 @@ namespace HelloWorldDotNet
             
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDiscoveryClient(Configuration);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddCloudFoundryActuators(Configuration);
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,8 +47,22 @@ namespace HelloWorldDotNet
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCloudFoundryActuators();
+            Console.WriteLine(" Before using Discovery Client");
             app.UseDiscoveryClient();
+
+            var counter = Metrics.CreateCounter("SamplePathCounter", "Counts requests to endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((context, next) =>
+            {
+                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                return next();
+            });
+
+            app.UseMetricServer();
+            app.UseHttpMetrics();
             app.UseMvc();
         }
     }

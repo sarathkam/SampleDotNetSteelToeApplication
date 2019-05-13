@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 
 namespace HelloWorldDotNet.Controllers
@@ -14,6 +11,7 @@ namespace HelloWorldDotNet.Controllers
     {
 
          private IConfiguration configuration;
+        //private readonly IMetrics _metrics;
 
         public ValuesController(IConfiguration config)
         {
@@ -25,7 +23,7 @@ namespace HelloWorldDotNet.Controllers
         public ActionResult<IEnumerable<string>> Get()
         {
             var messageVar = configuration["message"];
-            
+            Console.WriteLine("message -> ", configuration["message"]);
             return new string[] { "value1", "value2", messageVar};
         }
 

@@ -7,15 +7,17 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Pivotal.Extensions.Configuration.ConfigServer;
+using Steeltoe.Extensions.Configuration.ConfigServer;
 using Steeltoe.Extensions.Logging;
 
 namespace HelloWorldDotNet
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
+
             var host = new WebHostBuilder()
                 .UseKestrel()
                  .UseContentRoot(Directory.GetCurrentDirectory())
@@ -23,11 +25,13 @@ namespace HelloWorldDotNet
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((builderContext, configBuilder) =>
                 {
+                    
                     var env = builderContext.HostingEnvironment;
                     configBuilder.SetBasePath(env.ContentRootPath)
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                         .AddEnvironmentVariables()
+                        .AddCommandLine(args)
                         .AddConfigServer(env.EnvironmentName);
                 })
                 .ConfigureLogging((context, builder) =>
